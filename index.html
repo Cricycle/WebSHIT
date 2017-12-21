@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>WEBSHIT</title>
+        <!-- version 0.1.2 alpha -->
+        <meta name="copyright" content="The WebSHIT team (C) 2017, 2018">
+        <meta charset="utf-8">
+        <style>
+            body {
+                font-family: "Comic Sans MS", Helvetica;
+                background: #cccccc;
+            }
+            h1 {
+                font-size: 28pt;
+                
+            }
+            div#banner ul {
+                font-variant-caps: all-small-caps;
+                font-size: 18pt;
+                font-weight: lighter;
+                font-style: italic;
+            }
+            div#banner ul li:not(:first-child) {
+                writing-mode: vertical-lr;
+                text-orientation: upright;
+                padding-top: 7pt;
+            }
+            div#banner li {
+                list-style: none;
+                float: left;
+            }
+            div#banner li:first-child,
+            div#banner li:first-letter {
+                font-weight: bold;
+                font-size: 22pt;
+            }
+            @keyframes trippyfader {
+                0%, 100% {
+                    background-color: red;
+                }
+                50% {
+                    background-color: yellow;
+                }
+            }
+            div.box {
+                width: 100px;
+                height: 100px;
+                background-color: red;
+                animation-name: trippyfader;
+                animation-duration: 22103ms;
+                animation-iteration-count: infinite;
+            }
+            @keyframes spinrar {
+                /*TODO make this smoother, (more key frames?) brandon wants to*/
+                0%, 100% {
+                    transform: rotate3d(0, 2, 2, 0);
+                }
+                25% {
+                    transform: rotate3d(0, 2, 2, 90deg);
+                }
+                50% {
+                    transform: rotate3d(0, 2, 2, 180deg);
+                }
+                75% {
+                    transform: rotate3d(0, 2, 2, 270deg);
+                }
+            }
+            h1.rotate {
+                animation-name: spinrar;
+                animation-duration: 666ms;
+                animation-iteration-count: 69;
+            }
+        </style>
+        <script>
+            var d = new Date();
+            console.log("Initializing........");
+            function woah() {
+                let e = document.getElementById("howdidieverdothis");
+                console.log("You are going to spin, or maybe stop spinning. Bitch.");
+                e.classList.toggle("rotate");
+            }
+            function complete() {
+                var s = (new Date()) - d;
+                console.log("YOU HAVE ACHIEVED WEBSHIT. Time Taken: " + s);
+            }
+        </script>
+    </head>
+    <body onload="complete()">
+        <div class="box" onclick="woah()">
+            <h1 id="howdidieverdothis">WEBSHIT</h1>
+        </div>
+		<a href="webshit.html">Enter the future</a>
+    </body>
+</html>
