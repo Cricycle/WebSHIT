@@ -80,6 +80,8 @@
                 e.classList.toggle("rotate");
             }
             function complete() {
+                var year = (new Date()).getFullYear();
+                document.getElementById("xmas_ctr").innerHTML = Math.ceil((new Date(year + "-12-24 12:00:00") - new Date())/8.64e+7);
                 var s = (new Date()) - d;
                 console.log("YOU HAVE ACHIEVED WEBSHIT. Time Taken: " + s);
             }
@@ -99,6 +101,8 @@
             </ul>
         </div>
         <div style="clear: both"></div>
+        <hr>
+        <p><span style="font-weight: bold" id="xmas_ctr"></span> DAYS until CHRISTMAS! 🎄🎅</p>
         <hr>
         <p>Developer's Rules of Contribution:</p>
         <ol>
