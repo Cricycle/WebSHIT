@@ -82,8 +82,24 @@
             function complete() {
                 var year = (new Date()).getFullYear();
                 document.getElementById("xmas_ctr").innerHTML = Math.ceil((new Date(year + "-12-24 12:00:00") - new Date())/8.64e+7);
+                
+                if(isWednesday()) {
+                    let theDiv = document.getElementById("itiswednesdaymydudes")
+                    theDiv.innerHTML = '<iframe width="1280" height="720" src="https://www.youtube.com/embed/nUKQThJiDL0?autoplay=1&start=9" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>';
+                    // We could have used the youtube api but we were on our way out the door so we did a gross timeout to make the div go away
+                    // TODO make it shrink before disapperaring lol
+                    setTimeout(() => {
+                        console.log("hiding the wednesday spirit");
+                        theDiv.style.display = 'none';
+                    }, 19000);
+                }
+                
                 var s = (new Date()) - d;
                 console.log("YOU HAVE ACHIEVED WEBSHIT. Time Taken: " + s);
+            }
+            function isWednesday() {
+                let dayOfWeek = d.getDay();
+                return (dayOfWeek == 3);
             }
         </script>
     </head>
@@ -91,6 +107,7 @@
         <div class="box" onclick="woah()">
             <h1 id="howdidieverdothis">WEBSHIT</h1>
         </div>
+        <div id="itiswednesdaymydudes"></div>
         <div id="banner">
             <ul>
                 <li>Web</li>
