@@ -106,13 +106,10 @@
                 return (dayOfWeek == 3);
             }
             function setupTimer() {
-            	let countTimeFunction = () => {
-              		time = time + .1;
-                  console.log(time.toFixed(2));
+            	setInterval(() => {
+              	  time = time + .1;
                   document.getElementById("currenttime").innerHTML = time.toFixed(2);
-                  setTimeout(countTimeFunction, 100);
-              }
-            	setTimeout(countTimeFunction, 100);
+              }, 100);
             }
         </script>
     </head>
