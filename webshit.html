@@ -66,10 +66,11 @@
                     transform: rotate3d(0, 1, 0, 270deg);
                 }
             }
-            h1.rotate {
+            div.rotate {
                 animation-name: spinrar;
                 animation-duration: 666ms;
                 animation-iteration-count: 69;
+                transform-origin: 100%;
             }
         </style>
         <script>
@@ -114,8 +115,8 @@
         </script>
     </head>
     <body onload="complete()">
-        <div class="box" onclick="woah()">
-            <h1 id="howdidieverdothis">WEBSHIT</h1>
+        <div class="box" id="howdidieverdothis" onclick="woah()">
+            <h1>WEBSHIT</h1>
         </div>
         <div id="itiswednesdaymydudes"></div>
         <div id="banner">
