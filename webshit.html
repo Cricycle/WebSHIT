@@ -3,7 +3,7 @@
 <html>
     <head>
         <title>WEBSHIT</title>
-        <!-- version 0.1.2 alpha -->
+        <!-- version 0.1.5 alpha -->
         <meta name="copyright" content="The WebSHIT team (C) 2017, 2018">
         <meta charset="utf-8">
         <style>
@@ -72,10 +72,18 @@
                 animation-iteration-count: 69;
                 transform-origin: 100%;
             }
+            #mouse {
+              position: absolute;
+              width: 15px;
+            }
         </style>
         <script>
             var d = new Date();
             var time = 0.0;
+            var mouse = { x: 0, y:0 };
+            var mouseElem;
+            var mouseGagTimer = 0;
+            var mouseWidth = 15;
             console.log("Initializing........");
             function woah() {
                 let e = document.getElementById("howdidieverdothis");
@@ -96,21 +104,56 @@
                         theDiv.style.display = 'none';
                     }, 19000);                
                 }
+              
+                setupMouseTrail();
                 
-                setupTimer();
+                setupTimers();
                 
                 var s = (new Date()) - d;
+              
+                drawAnimations();
+              
                 console.log("YOU HAVE ACHIEVED WEBSHIT. Time Taken: " + s);
             }
             function isWednesday() {
                 let dayOfWeek = d.getDay();
                 return (dayOfWeek == 3);
             }
-            function setupTimer() {
+            function setupTimers() {
             	setInterval(() => {
-              	  time = time + .1;
-                  document.getElementById("currenttime").innerHTML = time.toFixed(2);
-              }, 100);
+              	  time = time + 1;
+                  mouseGagTimer += 1
+                  if(mouseGagTimer == 99) {
+                    mouseWidth += 1;
+                    mouseElem.style.width = mouseWidth + "px";
+                    mouseGagTimer = 0;
+                    console.log("mouse growth engaged " + mouseWidth);
+                  }
+                  document.getElementById("currenttime").innerHTML = (time / 100).toFixed(2);
+              }, 10);
+            }
+            function setupMouseTrail() {
+              let mouse = document.createElement('img');
+              mouseElem = document.body.appendChild(mouse);
+              mouseElem.id = "mouse";
+              mouseElem.src = "https://cdn140.picsart.com/240251204040212.png?r240x240";
+              document.body.style.cursor = 'none';
+              
+              document.onmousemove = handleMouseMove;
+            }
+            function handleMouseMove(event) {
+              mouse.x = event.clientX;
+              mouse.y = event.clientY;
+            }
+            function drawAnimations() {
+              // Use this funciton to draw all animatable thingies
+              drawMouse();
+              requestAnimationFrame(drawAnimations);
+            }
+            function drawMouse() {
+              //TODO hide mouse if you go off screen
+              mouseElem.style.left = mouse.x + "px";
+              mouseElem.style.top = mouse.y + "px";
             }
         </script>
     </head>
