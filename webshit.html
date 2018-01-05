@@ -3,38 +3,44 @@
 <html>
     <head>
         <title>WEBSHIT</title>
-        <!-- version 0.1.5 alpha -->
+        <!-- version 0.1.6 alpha -->
         <meta name="copyright" content="The WebSHIT team (C) 2017, 2018">
         <meta charset="utf-8">
+        <link href='https://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
         <style>
             body {
                 font-family: "Comic Sans MS", Helvetica;
-                background: #cccccc;
+                background: linear-gradient(45deg, #c5deea 0%, #8abbd7 31%, #066dab 100%);
             }
+            
             h1 {
                 font-size: 28pt;
-                
             }
+            
             div#banner ul {
                 font-variant-caps: all-small-caps;
                 font-size: 18pt;
                 font-weight: lighter;
                 font-style: italic;
             }
+            
             div#banner ul li:not(:first-child) {
                 writing-mode: vertical-lr;
                 text-orientation: upright;
                 padding-top: 7pt;
             }
+            
             div#banner li {
                 list-style: none;
                 float: left;
             }
+            
             div#banner li:first-child,
             div#banner li:first-letter {
                 font-weight: bold;
                 font-size: 22pt;
             }
+            
             @keyframes trippyfader {
                 0%, 100% {
                     background-color: red;
@@ -43,6 +49,7 @@
                     background-color: yellow;
                 }
             }
+            
             div.box {
                 width: 100px;
                 height: 100px;
@@ -51,6 +58,7 @@
                 animation-duration: 22103ms;
                 animation-iteration-count: infinite;
             }
+            
             @keyframes spinrar {
                 /*TODO make this smoother, (more key frames?) brandon wants to*/
                 0%, 100% {
@@ -66,17 +74,30 @@
                     transform: rotate3d(0, 1, 0, 270deg);
                 }
             }
+            
             div.rotate {
                 animation-name: spinrar;
                 animation-duration: 666ms;
                 animation-iteration-count: 69;
                 transform-origin: 100%;
             }
-            #mouse {
-              position: absolute;
-              width: 15px;
-              z-index: 10000;
-              pointer-events: none;
+            
+            img#mouse {
+                position: absolute;
+                width: 15px;
+                z-index: 10000;
+                pointer-events: none;
+            }
+            
+            p#powerlevel {
+                width: 50%;
+                position: relative;
+                left: 50%;
+                margin-left: -130px;
+            }
+            
+            span#currenttime {
+                font-family: Orbitron, "Courier New", sans-serif;
             }
         </style>
         <script>
@@ -84,16 +105,19 @@
             var time = 0.0;
             var mouse = { x: 0, y:0 };
             var mouseElem;
-            var mouseGagTimer = 0;
+            var mouseGagTimer = 0.0;
             var mouseWidth = 15;
+            
             console.log("Initializing........");
+            
             function woah() {
                 let e = document.getElementById("howdidieverdothis");
                 console.log("You are going to spin, or maybe stop spinning. Bitch.");
                 e.classList.toggle("rotate");
             }
+            
             function complete() {
-                var year = (new Date()).getFullYear();
+                var year = d.getFullYear();
                 document.getElementById("xmas_ctr").innerHTML = Math.ceil((new Date(year + "-12-24 12:00:00") - new Date())/8.64e+7);
                 
                 if(isWednesday()) {
@@ -104,58 +128,58 @@
                     setTimeout(() => {
                         console.log("hiding the wednesday spirit");
                         theDiv.style.display = 'none';
-                    }, 19000);                
+                    }, 18932);
                 }
               
                 setupMouseTrail();
-                
                 setupTimers();
-                
-                var s = (new Date()) - d;
-              
                 drawAnimations();
-              
-                console.log("YOU HAVE ACHIEVED WEBSHIT. Time Taken: " + s);
+                console.log("YOU HAVE ACHIEVED WEBSHIT. Time Taken: " + ((new Date()) - d));
             }
+            
             function isWednesday() {
                 let dayOfWeek = d.getDay();
                 return (dayOfWeek == 3);
             }
+            
             function setupTimers() {
-            	setInterval(() => {
-              	  time = time + 1;
-                  mouseGagTimer += 1
-                  if(mouseGagTimer == 99) {
-                    mouseWidth += 1;
-                    mouseElem.style.width = mouseWidth + "px";
-                    mouseGagTimer = 0;
-                    console.log("mouse growth engaged " + mouseWidth);
-                  }
-                  document.getElementById("currenttime").innerHTML = (time / 100).toFixed(2);
-              }, 10);
+                setInterval(() => {
+                    time = time + 1;
+                    mouseGagTimer += 0.1;
+                    if(mouseGagTimer >= 29.97) { // NTSC frame rate
+                      mouseWidth += 1;
+                      mouseElem.style.width = mouseWidth + "px";
+                      mouseGagTimer = 0;
+                      console.log("mouse growth engaged " + mouseWidth);
+                    }
+                    document.getElementById("currenttime").innerHTML = (time / 100).toFixed(2);
+                }, 10);
             }
+            
             function setupMouseTrail() {
-              let mouse = document.createElement('img');
-              mouseElem = document.body.appendChild(mouse);
-              mouseElem.id = "mouse";
-              mouseElem.src = "https://cdn140.picsart.com/240251204040212.png?r240x240";
-              document.body.style.cursor = 'none';
-              
-              document.onmousemove = handleMouseMove;
+                let mouse = document.createElement('img');
+                mouseElem = document.body.appendChild(mouse);
+                mouseElem.id = "mouse";
+                mouseElem.src = "mouse.gif";
+                document.body.style.cursor = 'none';
+                document.onmousemove = handleMouseMove;
             }
+            
             function handleMouseMove(event) {
-              mouse.x = event.clientX;
-              mouse.y = event.clientY;
+                mouse.x = event.clientX;
+                mouse.y = event.clientY;
             }
+            
             function drawAnimations() {
-              // Use this funciton to draw all animatable thingies
-              drawMouse();
-              requestAnimationFrame(drawAnimations);
+                // Use this funciton to draw all animatable thingies
+                drawMouse();
+                requestAnimationFrame(drawAnimations);
             }
+            
             function drawMouse() {
-              //TODO hide mouse if you go off screen
-              mouseElem.style.left = mouse.x + "px";
-              mouseElem.style.top = mouse.y + "px";
+                //TODO hide mouse if you go off screen
+                mouseElem.style.left = mouse.x + "px";
+                mouseElem.style.top = mouse.y + "px";
             }
         </script>
     </head>
@@ -175,7 +199,8 @@
         </div>
         <div style="clear: both"></div>
         <hr>
-        <p><span style="font-weight: bold" id="xmas_ctr"></span> DAYS until CHRISTMAS! 🎄🎅</p>
+        <p><center><span style="font-weight: bold" id="xmas_ctr"></span> DAYS until CHRISTMAS! 🎄🎅</center></p>
+        <p id="powerlevel">Time Spent Increasing IQ: <span id="currenttime"></span></p>
         <hr>
         <p>Developer's Rules of Contribution:</p>
         <ol>
@@ -185,11 +210,6 @@
             <li>One handwritten HTML file only.</li>
             <li>Webshit.</li>
         </ol>
-         <div>
-          <p class="timer">
-            Time Spent Increasing IQ: <span id="currenttime"></span>
-          </p>
-        </div>
         <p style="font-size: 8px">Best viewed with Mozzarella FoxFire version 59.0 and nothing else.</p>
     </body>
 </html>
