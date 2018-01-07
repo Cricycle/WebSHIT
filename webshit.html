@@ -99,7 +99,22 @@
             span#currenttime {
                 font-family: Orbitron, "Courier New", sans-serif;
             }
+			
+			.trail { /* className for the trail elements */
+				position: absolute;
+				height: 6px; width: 6px;
+				border-radius: 3px;
+				background: teal;
+			  }
+			  
+			.trailFood {
+				position: absolute;
+				height: 6px; width: 6px;
+				border-radius: 3px;
+			}
         </style>
+    </head>
+    <body onload="complete()">
         <script>
             var d = new Date();
             var time = 0.0;
@@ -147,7 +162,7 @@
                     time = time + 1;
                     mouseGagTimer += 0.1;
                     if(mouseGagTimer >= 29.97) { // NTSC frame rate
-                      mouseWidth += 10;
+                      mouseWidth += 10 * Math.random() / 2.0 + (score / 3.0);
                       mouseElem.style.width = mouseWidth + "px";
                       mouseGagTimer = 0;
                       console.log("mouse growth engaged " + mouseWidth);
@@ -166,13 +181,14 @@
             }
             
             function handleMouseMove(event) {
-                mouse.x = event.clientX;
-                mouse.y = event.clientY;
+                mouse.x = event.clientX * 0 + event.pageX;
+                mouse.y = event.clientY * 0 + event.pageY;
             }
             
             function drawAnimations() {
                 // Use this funciton to draw all animatable thingies
                 drawMouse();
+				drawDotTrail();
                 requestAnimationFrame(drawAnimations);
             }
             
@@ -181,9 +197,90 @@
                 mouseElem.style.left = mouse.x + "px";
                 mouseElem.style.top = mouse.y + "px";
             }
+			
+			// dots is an array of Dot objects
+			var dots = [];
+
+			// The Dot object used to scaffold the dots
+			var Dot = function(classname) {
+			  this.x = 0;
+			  this.y = 0;
+			  this.node = (function(){
+				let n = document.createElement("div");
+				n.className = classname == null ? "trail" : classname;
+				document.body.appendChild(n);
+				return n;
+			  }());
+			};
+			// The Dot.prototype.draw() method sets the position of 
+			  // the object's <div> node
+			Dot.prototype.draw = function() {
+			  this.node.style.left = this.x + "px";
+			  this.node.style.top = this.y + "px";
+			};
+
+			// Creates the Dot objects, populates the dots array
+			for (let i = 0; i < 5; i++) {
+			  let d = new Dot();
+			  dots.push(d);
+			}
+
+			// This is the screen redraw function
+			function drawDotTrail() {
+			  // Make sure the mouse position is set everytime
+				// draw() is called.
+			  let x = mouse.x,
+				  y = mouse.y;
+			  
+			  // This loop is where all the 90s magic happens
+			  dots.forEach(function(dot, index, dots) {
+				let nextDot = dots[index + 1] || dots[0];
+				
+				let tmpX = dot.x;
+				let tmpY = dot.y;
+				dot.x = x;
+				dot.y = y;
+				dot.draw();
+				x = tmpX;
+				y = tmpY;
+				x += (nextDot.x - dot.x) * .5;
+				y += (nextDot.y - dot.y) * .5;
+
+			  });
+			  
+			  generateFoodDot();
+			  checkFoodDot();
+			}
+			
+			var foodDot = null;
+			var score = 0;
+			var colorLen = 3;
+			var colorArray = ["white", "blue", "red", "lime"];
+			
+			// This creates a food dot for your snake.  Touch it to increase your dot trail by one
+			function generateFoodDot() {
+				if (foodDot == null)
+				{
+					foodDot = new Dot("trailFood");
+					foodDot.x = screen.width * Math.random();
+					foodDot.y = screen.height * Math.random();
+					foodDot.node.style.background = colorArray[Math.floor(score / colorLen) % colorArray.length];
+					foodDot.draw();
+				}
+			}
+			
+			// This checks if you are touching the food dot.
+			function checkFoodDot()
+			{
+				if (Math.abs(mouse.x - foodDot.x) + Math.abs(mouse.y - foodDot.y) < 11)
+				{
+					++score;
+					dots.push(foodDot);
+					foodDot = null;
+					generateFoodDot();
+				}
+			}
         </script>
-    </head>
-    <body onload="complete()">
         <div class="box" id="howdidieverdothis" onclick="woah()">
             <h1>WEBSHIT</h1>
         </div>
