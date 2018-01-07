@@ -147,7 +147,7 @@
                     time = time + 1;
                     mouseGagTimer += 0.1;
                     if(mouseGagTimer >= 29.97) { // NTSC frame rate
-                      mouseWidth += 1;
+                      mouseWidth += 10;
                       mouseElem.style.width = mouseWidth + "px";
                       mouseGagTimer = 0;
                       console.log("mouse growth engaged " + mouseWidth);
