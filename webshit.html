@@ -100,20 +100,43 @@
                 font-family: Orbitron, "Courier New", sans-serif;
             }
 			
-			.trail { /* className for the trail elements */
-				position: absolute;
-				height: 6px; width: 6px;
-				border-radius: 3px;
-				background: teal;
-                pointer-events: none;
-			  }
-			  
-			.trailFood {
-				position: absolute;
-				height: 6px; width: 6px;
-				border-radius: 3px;
-                pointer-events: none;
-			}
+            .trail { /* className for the trail elements */
+              position: absolute;
+              height: 6px; width: 6px;
+              border-radius: 3px;
+              background: teal;
+                      pointer-events: none;
+              }
+              
+            .trailFood {
+              position: absolute;
+              height: 6px; width: 6px;
+              border-radius: 3px;
+              pointer-events: none;
+            }
+            
+            div#codebox {
+                font-family: Consolas, "Lucidia Console", monospace;
+            }
+            
+            div#codebox * { display: inline; }
+            
+            .blink {
+                animation: blink-animation 1s steps(2, start) infinite;
+                -webkit-animation: blink-animation 1s steps(2, start) infinite;
+            }
+            
+            @keyframes blink-animation {
+                to {
+                  visibility: hidden;
+                }
+            }
+            
+            @-webkit-keyframes blink-animation {
+                to {
+                  visibility: hidden;
+                }
+            }
         </style>
     </head>
     <body onload="complete()">
@@ -146,8 +169,19 @@
                         console.log("hiding the wednesday spirit");
                         theDiv.style.display = 'none';
                     }, 18932);
+                } else {
+                    window.addEventListener("keydown", function(event) {
+                        let c = event.key.charCodeAt(0);
+                        if (event.key == "Enter") {
+                            document.getElementById("codebox_inner").innerHTML += "<br />";
+                        } else if (event.code == "Space") {
+                            document.getElementById("codebox_inner").innerHTML += "&nbsp;";
+                        } else if (event.key.length == 1 && c >= 32 && c <= 126) {
+                            document.getElementById("codebox_inner").innerText += event.key[0];
+                        }
+                    }, true);
                 }
-              
+
                 setupMouseTrail();
                 setupTimers();
                 drawAnimations();
@@ -297,6 +331,9 @@
             </ul>
         </div>
         <div style="clear: both"></div>
+        <div id="codebox">
+            <span id="codebox_inner"></span><span class="blink">_</span>
+        </div>
         <hr>
         <p><center><span style="font-weight: bold" id="xmas_ctr"></span> DAYS until CHRISTMAS! 🎄🎅</center></p>
         <p id="powerlevel">Time Spent Increasing IQ: <span id="currenttime"></span></p>
