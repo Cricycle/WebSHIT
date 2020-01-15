@@ -3,8 +3,8 @@
 <html>
     <head>
         <title>WEBSHIT</title>
-        <!-- version 0.1.6 alpha -->
-        <meta name="copyright" content="The WebSHIT team (C) 2017, 2018">
+        <!-- version 0.1.7 alpha -->
+        <meta name="copyright" content="The WebSHIT team (C) 2017, 2018, 2020">
         <meta charset="utf-8">
         <link href='https://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
         <style>
@@ -12,35 +12,35 @@
                 font-family: "Comic Sans MS", Helvetica;
                 background: linear-gradient(45deg, #c5deea 0%, #8abbd7 31%, #066dab 100%);
             }
-            
+
             h1 {
                 font-size: 28pt;
             }
-            
+
             div#banner ul {
                 font-variant-caps: all-small-caps;
                 font-size: 18pt;
                 font-weight: lighter;
                 font-style: italic;
             }
-            
+
             div#banner ul li:not(:first-child) {
                 writing-mode: vertical-lr;
                 text-orientation: upright;
                 padding-top: 7pt;
             }
-            
+
             div#banner li {
                 list-style: none;
                 float: left;
             }
-            
+
             div#banner li:first-child,
             div#banner li:first-letter {
                 font-weight: bold;
                 font-size: 22pt;
             }
-            
+
             @keyframes trippyfader {
                 0%, 100% {
                     background-color: red;
@@ -49,7 +49,7 @@
                     background-color: yellow;
                 }
             }
-            
+
             div.box {
                 width: 100px;
                 height: 100px;
@@ -58,7 +58,7 @@
                 animation-duration: 22103ms;
                 animation-iteration-count: infinite;
             }
-            
+
             @keyframes spinrar {
                 /*TODO make this smoother, (more key frames?) brandon wants to*/
                 0%, 100% {
@@ -74,32 +74,32 @@
                     transform: rotate3d(0, 1, 0, 270deg);
                 }
             }
-            
+
             div.rotate {
                 animation-name: spinrar;
                 animation-duration: 666ms;
                 animation-iteration-count: 69;
                 transform-origin: 100%;
             }
-            
+
             img#mouse {
                 position: absolute;
                 width: 15px;
                 z-index: 10000;
                 pointer-events: none;
             }
-            
+
             p#powerlevel {
                 width: 50%;
                 position: relative;
                 left: 50%;
                 margin-left: -130px;
             }
-            
+
             span#currenttime {
                 font-family: Orbitron, "Courier New", sans-serif;
             }
-			
+
             .trail { /* className for the trail elements */
               position: absolute;
               height: 6px; width: 6px;
@@ -107,31 +107,31 @@
               background: teal;
                       pointer-events: none;
               }
-              
+
             .trailFood {
               position: absolute;
               height: 6px; width: 6px;
               border-radius: 3px;
               pointer-events: none;
             }
-            
+
             div#codebox {
                 font-family: Consolas, "Lucidia Console", monospace;
             }
-            
+
             div#codebox * { display: inline; }
-            
+
             .blink {
                 animation: blink-animation 1s steps(2, start) infinite;
                 -webkit-animation: blink-animation 1s steps(2, start) infinite;
             }
-            
+
             @keyframes blink-animation {
                 to {
                   visibility: hidden;
                 }
             }
-            
+
             @-webkit-keyframes blink-animation {
                 to {
                   visibility: hidden;
@@ -147,19 +147,26 @@
             var mouseElem;
             var mouseGagTimer = 0.0;
             var mouseWidth = 15;
-            
+            var cmd = "";
+            var drv = "A";
+
             console.log("Initializing........");
-            
+
+            function secure(s) {
+                // stackoverflow assures me that this is 100% hack-proof
+                return s.replace(/[a-zA-Z]/g,function(c){return String.fromCharCode((c<="Z"?90:122)>=(c=c.charCodeAt(0)+13)?c:c-26);});
+            }
+
             function woah() {
                 let e = document.getElementById("howdidieverdothis");
                 console.log("You are going to spin, or maybe stop spinning. Bitch.");
                 e.classList.toggle("rotate");
             }
-            
+
             function complete() {
                 var year = d.getFullYear();
                 document.getElementById("xmas_ctr").innerHTML = Math.ceil((new Date(year + "-12-24 12:00:00") - new Date())/8.64e+7);
-                
+
                 if(isWednesday()) {
                     let theDiv = document.getElementById("itiswednesdaymydudes")
                     theDiv.innerHTML = '<iframe width="1280" height="720" src="https://www.youtube.com/embed/nUKQThJiDL0?autoplay=1&start=9" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>';
@@ -171,13 +178,32 @@
                     }, 18932);
                 } else {
                     window.addEventListener("keydown", function(event) {
+                        if (event.keyCode == 8) {
+                            document.getElementById("codebox_inner").innerText += "^H";
+                            cmd = cmd.slice(0, -1);
+                            event.preventDefault();
+                        }
+
                         let c = event.key.charCodeAt(0);
                         if (event.key == "Enter") {
-                            document.getElementById("codebox_inner").innerHTML += "<br />";
+                            var status = parseCmd(cmd.trim().toLowerCase());
+                            if (status == "file not found") {
+                                document.getElementById("codebox_inner").innerHTML += "<br />Bad command or file name";
+                                // help the user out by looking at the next disk
+                                drv = String.fromCharCode(drv.charCodeAt([]) + true);
+                                if (drv == "[") { 
+                                    drv = "A";
+                                }
+                            }
+                            if (status != "false") {
+                                document.getElementById("codebox_inner").innerHTML += "<br />" + drv + ":&#92;>&nbsp;";
+                                cmd = "";
+                            }
                         } else if (event.code == "Space") {
                             document.getElementById("codebox_inner").innerHTML += "&nbsp;";
                         } else if (event.key.length == 1 && c >= 32 && c <= 126) {
                             document.getElementById("codebox_inner").innerText += event.key[0];
+                            cmd += event.key[0];
                         }
                     }, true);
                 }
@@ -187,12 +213,30 @@
                 drawAnimations();
                 console.log("YOU HAVE ACHIEVED WEBSHIT. Time Taken: " + ((new Date()) - d));
             }
-            
+
+            function parseCmd(line) {
+                if (line == "") {
+                    return "false";
+                }
+
+                // Affiliate marketing for our sister site
+                let four = line.slice(-4);
+                if (four.charCodeAt(0) == 0x79 &&
+                    four.charCodeAt(1) == four.charCodeAt(2) && four.charCodeAt(1) == 101
+                    && four.charCodeAt(3) == 116) {
+
+                    document.location = secure("uggcf://lrrg.nmherrqtr.arg");
+                    return "true";
+                }
+
+                return "file not found";
+            }
+
             function isWednesday() {
                 let dayOfWeek = d.getDay();
                 return (dayOfWeek == 3);
             }
-            
+
             function setupTimers() {
                 setInterval(() => {
                     time = time + 1;
@@ -206,7 +250,7 @@
                     document.getElementById("currenttime").innerHTML = (time / 100).toFixed(2);
                 }, 10);
             }
-            
+
             function setupMouseTrail() {
                 let mouse = document.createElement('img');
                 mouseElem = document.body.appendChild(mouse);
@@ -215,107 +259,107 @@
                 document.body.style.cursor = 'none';
                 document.onmousemove = handleMouseMove;
             }
-            
+
             function handleMouseMove(event) {
                 mouse.x = event.clientX * 0 + event.pageX;
                 mouse.y = event.clientY * 0 + event.pageY;
             }
-            
+
             function drawAnimations() {
                 // Use this funciton to draw all animatable thingies
                 drawMouse();
-				drawDotTrail();
+                                drawDotTrail();
                 requestAnimationFrame(drawAnimations);
             }
-            
+
             function drawMouse() {
                 //TODO hide mouse if you go off screen
                 mouseElem.style.left = mouse.x + "px";
                 mouseElem.style.top = mouse.y + "px";
             }
-			
-			// dots is an array of Dot objects
-			var dots = [];
 
-			// The Dot object used to scaffold the dots
-			var Dot = function(classname) {
-			  this.x = 0;
-			  this.y = 0;
-			  this.node = (function(){
-				let n = document.createElement("div");
-				n.className = classname == null ? "trail" : classname;
-				document.body.appendChild(n);
-				return n;
-			  }());
-			};
-			// The Dot.prototype.draw() method sets the position of 
-			  // the object's <div> node
-			Dot.prototype.draw = function() {
-			  this.node.style.left = this.x + "px";
-			  this.node.style.top = this.y + "px";
-			};
+                        // dots is an array of Dot objects
+                        var dots = [];
 
-			// Creates the Dot objects, populates the dots array
-			for (let i = 0; i < 5; i++) {
-			  let d = new Dot();
-			  dots.push(d);
-			}
+                        // The Dot object used to scaffold the dots
+                        var Dot = function(classname) {
+                          this.x = 0;
+                          this.y = 0;
+                          this.node = (function(){
+                                let n = document.createElement("div");
+                                n.className = classname == null ? "trail" : classname;
+                                document.body.appendChild(n);
+                                return n;
+                          }());
+                        };
+                        // The Dot.prototype.draw() method sets the position of
+                          // the object's <div> node
+                        Dot.prototype.draw = function() {
+                          this.node.style.left = this.x + "px";
+                          this.node.style.top = this.y + "px";
+                        };
 
-			// This is the screen redraw function
-			function drawDotTrail() {
-			  // Make sure the mouse position is set everytime
-				// draw() is called.
-			  let x = mouse.x,
-				  y = mouse.y;
-			  
-			  // This loop is where all the 90s magic happens
-			  dots.forEach(function(dot, index, dots) {
-				let nextDot = dots[index + 1] || dots[0];
-				
-				let tmpX = dot.x;
-				let tmpY = dot.y;
-				dot.x = x;
-				dot.y = y;
-				dot.draw();
-				x = tmpX;
-				y = tmpY;
-				x += (nextDot.x - dot.x) * .5;
-				y += (nextDot.y - dot.y) * .5;
+                        // Creates the Dot objects, populates the dots array
+                        for (let i = 0; i < 5; i++) {
+                          let d = new Dot();
+                          dots.push(d);
+                        }
 
-			  });
-			  
-			  generateFoodDot();
-			  checkFoodDot();
-			}
-			
-			var foodDot = null;
-			var score = 0;
-			var colorLen = 3;
-			var colorArray = ["white", "blue", "red", "lime"];
-			
-			// This creates a food dot for your snake.  Touch it to increase your dot trail by one
-			function generateFoodDot() {
-				if (foodDot == null)
-				{
-					foodDot = new Dot("trailFood");
-					foodDot.x = screen.width * Math.random();
-					foodDot.y = screen.height * Math.random();
-					foodDot.node.style.background = colorArray[Math.floor(score / colorLen) % colorArray.length];
-					foodDot.draw();
-				}
-			}
-			
-			// This checks if you are touching the food dot.
-			function checkFoodDot()
-			{
-				if (Math.abs(mouse.x - foodDot.x) + Math.abs(mouse.y - foodDot.y) < 11)
-				{
-					++score;
-					dots.push(foodDot);
-					foodDot = null;
-					generateFoodDot();
-				}
-			}
+                        // This is the screen redraw function
+                        function drawDotTrail() {
+                          // Make sure the mouse position is set everytime
+                                // draw() is called.
+                          let x = mouse.x,
+                                  y = mouse.y;
+
+                          // This loop is where all the 90s magic happens
+                          dots.forEach(function(dot, index, dots) {
+                                let nextDot = dots[index + 1] || dots[0];
+
+                                let tmpX = dot.x;
+                                let tmpY = dot.y;
+                                dot.x = x;
+                                dot.y = y;
+                                dot.draw();
+                                x = tmpX;
+                                y = tmpY;
+                                x += (nextDot.x - dot.x) * .5;
+                                y += (nextDot.y - dot.y) * .5;
+
+                          });
+
+                          generateFoodDot();
+                          checkFoodDot();
+                        }
+
+                        var foodDot = null;
+                        var score = 0;
+                        var colorLen = 3;
+                        var colorArray = ["white", "blue", "red", "lime"];
+
+                        // This creates a food dot for your snake.  Touch it to increase your dot trail by one
+                        function generateFoodDot() {
+                                if (foodDot == null)
+                                {
+                                        foodDot = new Dot("trailFood");
+                                        foodDot.x = screen.width * Math.random();
+                                        foodDot.y = screen.height * Math.random();
+                                        foodDot.node.style.background = colorArray[Math.floor(score / colorLen) % colorArray.length];
+                                        foodDot.draw();
+                                }
+                        }
+
+                        // This checks if you are touching the food dot.
+                        function checkFoodDot()
+                        {
+                                if (Math.abs(mouse.x - foodDot.x) + Math.abs(mouse.y - foodDot.y) < 11)
+                                {
+                                        ++score;
+                                        dots.push(foodDot);
+                                        foodDot = null;
+                                        generateFoodDot();
+                                }
+                        }
         </script>
         <div class="box" id="howdidieverdothis" onclick="woah()">
             <h1>WEBSHIT</h1>
